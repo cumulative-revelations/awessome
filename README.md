@@ -1,3 +1,3 @@
 A Word Embedding Sentiment Scorer Of Many Emotions (awessome) is a framework with the purpose of predicting the sentiment intensity of sentences.
-AWESOME relies on sentiment seed-words and word embedding, where the cosine similarity between the vector representation of two sentences is considered as a reflection of their sentiment similarity. 
-AWESOME capitalizes on pre-existing lexicons ([VADER](https://github.com/cjhutto/vaderSentiment) , [LabMT](https://trinker.github.io/qdapDictionaries/labMT.html)), is scalable, and does not require training, providing more fine grained (and accurate) sentiment intensity scores of words, phrases and text.
+awessome relies on sentiment seed-words and word embedding, where the cosine similarity between the vector representation of two sentences is considered as a reflection of their sentiment similarity. 
+awessome capitalizes on pre-existing lexicons ([VADER](https://github.com/cjhutto/vaderSentiment) , [LabMT](https://trinker.github.io/qdapDictionaries/labMT.html)), is scalable, and does not require training, providing more fine grained (and accurate) sentiment intensity scores of words, phrases and text.
