@@ -58,7 +58,6 @@ class MaxSentimentIntensityAggregator(SentimentIntensityAggregator):
 class SentimentIntensityScorerCreator:
 
     def __init__(self, lexicon_file, seed_size, aggregation_method, model_language, weighted=False):
-        
         self.lexicon_list=lexicon_list
         self.seed_size=seed_size
         self.aggregation_method=aggregation_method
@@ -73,9 +72,10 @@ class SentimentIntensityScorerCreator:
             #default
             self.lexicon_list, self.lexicon_dict=readSeedLexicon('vader')
 
-        #The size of seeds list   
-        if self.seed_size > len(self.lexicon_list)/2:
-            self.seed_size=len(self.lexicon_list)/2
+        #The size of seeds list 
+        max_seed_size=len(self.lexicon_list)/2
+        if self.seed_size > max_seed_size:
+            self.seed_size=max_seed_size
 
         #The used model language for embedding
         self.models=[
