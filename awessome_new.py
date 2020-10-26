@@ -15,7 +15,6 @@ class Builder:
    def getLexicon(self): pass
    def getAggregation(self): pass
    def getModel(self): pass
-   def getSeedsSize(self): pass
    def getSeeds(self):pass
 
 
