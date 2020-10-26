@@ -16,7 +16,7 @@ class Builder:
    def getAggregation(self): pass
    def getModel(self): pass
    def getSeeds(self): pass
-   def score(self): pass
+   def scorer(self): pass
 
 class SentimentIntensityFromPrebuiltLexiconsBuilder(Builder):
 
@@ -35,13 +35,13 @@ class SentimentIntensityFromPrebuiltLexiconsBuilder(Builder):
       embedder = self.getModel()
       pos_seedsEmbeddings, neg_seedsEmbeddings = self.getSeeds(lexiconList,embedder)
 
-      self._score = SentimentIntensityScorer(pos_seedsEmbeddings, neg_seedsEmbeddings, aggregator, embedder, self.weighted)
+      self._scorer = SentimentIntensityScorer(pos_seedsEmbeddings, neg_seedsEmbeddings, aggregator, embedder, self.weighted)
 
 
-   def score(self): 
-      score = self._score
+   def scorer(self):
+      scorer = self._scorer
       self.reset()
-      return score
+      return scorer
 
    def getLexicon(self):
       lexicons=['vader','labmt']
@@ -166,4 +166,4 @@ if __name__ == "__main__":
 
    builder = SentimentIntensityFromPrebuiltLexiconsBuilder('vader','100','avg','bert-base-nli-mean-tokens')
    
-   print(builder.score.scoreSentence("I am Happy"))
+   print(builder.scorer.scoreSentence("I am Happy"))
