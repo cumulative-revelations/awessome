@@ -20,7 +20,7 @@ class Builder:
 
 class SentimentIntensityFromPrebuiltLexiconsBuilder(Builder):
 
-   def __init__(self, lexiconFile, seedSize, aggregationMethod, modelLanguage, weighted=False):
+   def __init__(self, aggregationMethod, modelLanguage, lexiconFile, seedSize, weighted=False):
       self.lexiconFile=lexiconFile
       self.seedSize=seedSize
       self.aggregationMethod=aggregationMethod
@@ -164,7 +164,7 @@ class SentimentIntensityScorer:
   
 if __name__ == "__main__":
 
-   builder = SentimentIntensityFromPrebuiltLexiconsBuilder('vader','100','avg','bert-base-nli-mean-tokens')
+   builder = SentimentIntensityFromPrebuiltLexiconsBuilder('avg','bert-base-nli-mean-tokens','vader','100')
    builder.score.scoreSentence("I am Happy")
 
    
