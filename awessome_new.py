@@ -15,12 +15,12 @@ class Builder:
    def getLexicon(self): pass
    def getAggregation(self): pass
    def getModel(self): pass
-   def getSeeds(self):pass
-
+   def getSeeds(self): pass
+   def score(self): pass
 
 class SentimentIntensityFromPrebuiltLexiconsBuilder(Builder):
 
-   def __init__(self, aggregationMethod, modelLanguage, lexiconFile, seedSize, weighted=False):
+   def __init__(self, lexiconFile, seedSize, aggregationMethod, modelLanguage, weighted=False):
       self.lexiconFile=lexiconFile
       self.seedSize=seedSize
       self.aggregationMethod=aggregationMethod
@@ -29,15 +29,16 @@ class SentimentIntensityFromPrebuiltLexiconsBuilder(Builder):
 
       self.reset()
 
-   def reset(self) 
-      lexiconList, lexiconDict = getLexicon()
-      aggregator = getAggregation()
-      embedder = getModel()
-      pos_seedsEmbeddings, neg_seedsEmbeddings = getSeeds(lexiconList,embedder)
+   def reset(self):
+      lexiconList, lexiconDict = self.getLexicon()
+      aggregator = self.getAggregation()
+      embedder = self.getModel()
+      pos_seedsEmbeddings, neg_seedsEmbeddings = self.getSeeds(lexiconList,embedder)
 
-      self._score = SentimentIntensityScorer(pos_seedsEmbeddings, neg_seedsEmbeddings, aggregator, embedder, weighted)
+      self._score = SentimentIntensityScorer(pos_seedsEmbeddings, neg_seedsEmbeddings, aggregator, embedder, self.weighted)
 
-   def score(self) 
+
+   def score(self): 
       score = self._score
       self.reset()
       return score
@@ -50,22 +51,21 @@ class SentimentIntensityFromPrebuiltLexiconsBuilder(Builder):
          #default
          lexicon = 'vader'
 
-      lexicon_list=[]
-      lexicon_dict={}
+      lexiconDict={}
       seeds=open("lexicon/"+lexicon+".txt", "r", encoding='utf-8-sig').readlines()
       for i in range(len(seeds)):
          line=seeds[i].split('\t')
          lexiconDict[line[0].strip()]=line[1].strip()
-         lexiconDict=dict(sorted(lexicon_dict.items(), key=operator.itemgetter(1),reverse=True))
+         lexiconDict=dict(sorted(lexiconDict.items(), key=operator.itemgetter(1),reverse=True))
 
-      return lexiconDict.keys(), lexiconDict
+      return list(lexiconDict.keys()), lexiconDict
 
    
    def getAggregation(self):
       aggregators={
-         'sum': SumSentimentIntensityAggregator(),
-         'avg': AvgSentimentIntensityAggregator(),
-         'max': MaxSentimentIntensityAggregator()
+         'sum': SumSentimentIntensityAggregator,
+         'avg': AvgSentimentIntensityAggregator,
+         'max': MaxSentimentIntensityAggregator
         }
 
       if self.aggregationMethod in aggregators:
@@ -99,12 +99,12 @@ class SentimentIntensityFromPrebuiltLexiconsBuilder(Builder):
       return embedder
 
 
-   def getSeeds(self,lexiconList,embedder)
+   def getSeeds(self,lexiconList,embedder):
 
-      if self.seedSize > len(lexiconList)/2:
+      if int(self.seedSize) > len(lexiconList)/2:
          __seedSize=len(lexiconList)/2
       else:
-         __seedSize = self.__seedSize
+         __seedSize = self.seedSize
 
       posSeeds=lexiconList[:int(__seedSize)]
       negSeeds=lexiconList[-int(__seedSize):]
@@ -125,12 +125,12 @@ class SentimentIntensityScorer:
          
 
    def scoreSentence(self, text):
-      text=splitLongText(text)
+      text=self.splitLongText(text)
       text_embedding=self.embedder.encode(text)
-      distances_pos=cosinSim(text_embedding, self.pos_seeds_embeddings)
-      distances_neg=cosinSim(text_embedding, self.neg_seeds_embeddings)
+      distances_pos=self.cosinSim(text_embedding, self.pos_seeds_embeddings)
+      distances_neg=self.cosinSim(text_embedding, self.neg_seeds_embeddings)
       if self.weighted == True:
-         distances_pos, distances_neg=add_weight(distances_pos,distances_neg)
+         distances_pos, distances_neg=self.add_weight(distances_pos,distances_neg)
       score=self.aggregator.getScore(distances_pos,distances_neg)
       return score
 
@@ -156,15 +156,14 @@ class SentimentIntensityScorer:
    def addWeight(self, distances_pos, distances_neg):
       distances_pos_w=[]
       distances_neg_w=[]  
-         for i in range(len(distances_pos)):
-            distances_pos_w.append(distances_pos[i] * float(self.lexiconDict[self.lexiconList[i]]))
-            distances_neg_w.append(distances_neg[i] * float(self.lexiconDict[self.lexiconList[i]]))
+      for i in range(len(distances_pos)):
+         distances_pos_w.append(distances_pos[i] * float(self.lexiconDict[self.lexiconList[i]]))
+         distances_neg_w.append(distances_neg[i] * float(self.lexiconDict[self.lexiconList[i]]))
       return distances_pos_w,distances_neg_w
 
   
 if __name__ == "__main__":
 
-   builder = SentimentIntensityFromPrebuiltLexiconsBuilder('avg','bert-base-nli-mean-tokens','vader','100')
-   builder.score.scoreSentence("I am Happy")
-
+   builder = SentimentIntensityFromPrebuiltLexiconsBuilder('vader','100','avg','bert-base-nli-mean-tokens')
    
+   print(builder.score.scoreSentence("I am Happy"))
