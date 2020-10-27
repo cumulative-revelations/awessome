@@ -11,16 +11,19 @@ from similarity_measure import *
 
 if __name__ == "__main__":
 
-    sis_builder = SentimentIntensityScorerBuilder('avg','bert-base-nli-mean-tokens')
-    sis_scorer = sis_builder.build_scorer_from_prebuilt_lexicon('vader')
+    avg_builder = SentimentIntensityScorerBuilder('avg','bert-base-nli-mean-tokens')
+    max_builder = SentimentIntensityScorerBuilder('max', 'bert-base-nli-mean-tokens')
+    vader_scorer = avg_builder.build_scorer_from_prebuilt_lexicon('vader')
+    labmt_scorer = max_builder.build_scorer_from_prebuilt_lexicon('labmt')
 
-    print(sis_scorer.name)
-   
     sentences = ['I am happy',
                 'I am feeling very sad',
                 'I cant wait to go to the party',
-                'I am not happy']
-   
+                'I am not happy',
+                 'This is awessome!!']
+
+
     for sentence in sentences:
-        print(sentence, sis_scorer.score_sentence(sentence))
- 
+        print(vader_scorer.name, sentence, vader_scorer.score_sentence(sentence))
+        print(labmt_scorer.name, sentence, labmt_scorer.score_sentence(sentence))
+
