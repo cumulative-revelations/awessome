@@ -1,34 +1,43 @@
-
-
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Oct 20 20:20:20 2020
+@author: Amal Htait and Leif Azzopardi
+"""
 
 
 class SentimentIntensityScorer:
 
-   def __init__(self, pos_seeds_embeddings, neg_seeds_embeddings, aggregator, similarity,  embedder, weighted=False):
+   def __init__(self, pos_seeds_embeddings, neg_seeds_embeddings, aggregator,  language_model_embedder, similarity_method, similarity_measure, weighted, builder_name):
       """
 
       :param pos_seeds_embeddings:
       :param neg_seeds_embeddings:
       :param aggregator:
-      :param embedder:
-      :param weighted:
+      :param language_model_embedder:
+      :param similarity_method: We're using scipy model, but others can be later added
+      :param similarity_measure: scipy offers several measures ex: cosine, jaccard, etc
+      :param weighted: is a boolean, if True we use a dictionary of terms as weights to modify the similarity between 
       """
-      self.pos_seedsEmbeddings=pos_seedsEmbeddings
-      self.neg_seedsEmbeddings=neg_seedsEmbeddings
+      self.pos_seeds_embeddings=pos_seeds_embeddings
+      self.neg_seeds_embeddings=neg_seeds_embeddings
       self.aggregator=aggregator
-      self.embedder=embedder
+      self.similarity_method=similarity_method
+      self.similarity_measure=similarity_measure
+      self.language_model_embedder=language_model_embedder
       self.weighted=weighted
-      self.name = 'avg-bert-vader'
+      self.name = builder_name
+
 
    def score_sentence(self, text):
-      text=self.splitLongText(text)
-      text_embedding=self.embedder.encode(text)
-      distances_pos=self.cosinSim(text_embedding, self.pos_seeds_embeddings)
-      distances_neg=self.cosinSim(text_embedding, self.neg_seeds_embeddings)
+      text=self.split_long_sentence(text)
+      text_embedding=self.language_model_embedder.encode(text)
+
+      distances_pos=self.similarity_method.similarity_value(text_embedding, self.pos_seeds_embeddings, self.similarity_measure)
+      distances_neg=self.similarity_method.similarity_value(text_embedding, self.neg_seeds_embeddings, self.similarity_measure)
 
       if self.weighted == True:
          distances_pos, distances_neg=self.add_weight(distances_pos, distances_neg)
-      score=self.aggregator.aggscore(distances_pos, distances_neg)
+      score=self.aggregator.agg_score(distances_pos, distances_neg)
 
       return score
 
@@ -37,23 +46,19 @@ class SentimentIntensityScorer:
       scoreDict={}
       for i in range(len(sentence_list)):
          score=self.scoreSentence(sentence_list[i])
-         scoreDict[sentence_list[i]]=score
+         score_dict[sentence_list[i]]=score
 
       return scoreDict  
-
-
-   def cosinSim(self, textEmbedding, seedsEmbeddings):
-      return scipy.spatial.distance.cdist([textEmbedding], seedsEmbeddings, "cosine")[0]
 
 
    def split_long_sentence(self, text):
       max_length=256
       separator=' '
-      textLength=len(text.split())
+      text_length=len(text.split())
 
       if text_length > max_length:
-         textList=text.split()[:maxLength]   
-         text=separator.join(textList) 
+         text_list=text.split()[:max_length]   
+         text=separator.join(text_list) 
 
       return text 
 
@@ -63,8 +68,8 @@ class SentimentIntensityScorer:
       distances_neg_w=[]  
 
       for i in range(len(distances_pos)):
-         distances_pos_w.append(distances_pos[i] * float(self.lexiconDict[self.lexiconList[i]]))
-         distances_neg_w.append(distances_neg[i] * float(self.lexiconDict[self.lexiconList[i]]))
+         distances_pos_w.append(distances_pos[i] * float(self.lexicon_dict[self.lexicon_list[i]]))
+         distances_neg_w.append(distances_neg[i] * float(self.lexicon_dict[self.lexicon_list[i]]))
 
       return distances_pos_w,distances_neg_w
 

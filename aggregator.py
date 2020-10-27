@@ -6,14 +6,11 @@ Created on Tue Oct 20 20:20:20 2020
 
 class SentimentIntensityAggregator:
     
-    def __init__(weights=None):
-        """
-        weights: is a dictionary of terms and weights
-        """
-        self.weights = None
+    def __init__():
+       pass
     
         
-    def aggscore(self, pos_dists, neg_dists):
+    def agg_score(pos_dists, neg_dists):
         """
         pos_dists: a list of scores for pos terms
         neg_dists: a list of scores for neg terms
@@ -24,12 +21,13 @@ class SentimentIntensityAggregator:
     
 class SumSentimentIntensityAggregator(SentimentIntensityAggregator):
 
-    def aggscore(self, pos_dists, neg_dists):  
+    def agg_score(pos_dists, neg_dists):  
         pos_score=0.0
         neg_score=0.0
-        for i in range(len(self.pos_dists)):
-            pos_score=pos_score + (1-self.pos_dists[i])
-            neg_score=neg_score + (1-self.neg_dists[i])
+        dists_size = len(pos_dists.tolist())
+        for i in range(dists_size):
+            pos_score=pos_score + (1-pos_dists[i])
+            neg_score=neg_score + (1-neg_dists[i])
         score=pos_score - neg_score
                
         return score
@@ -37,15 +35,15 @@ class SumSentimentIntensityAggregator(SentimentIntensityAggregator):
 
 class AvgSentimentIntensityAggregator(SentimentIntensityAggregator):
 
-
-    def aggscore(self, pos_dists, neg_dists):   
+    def agg_score(pos_dists, neg_dists):   
         pos_sum=0.0
         neg_sum=0.0
-        for i in range(len(self.pos_dists)):
-            pos_sum=pos_sum + (1-self.pos_dists[i])
-            neg_sum=neg_sum + (1-self.neg_dists[i])
-        pos_score=sum(pos_sum)/len(self.pos_dists)
-        neg_score=sum(neg_score)/len(self.neg_dists)
+        dists_size = len(pos_dists.tolist())
+        for i in range(dists_size):
+            pos_sum=pos_sum + (1-pos_dists[i])
+            neg_sum=neg_sum + (1-neg_dists[i])
+        pos_score=pos_sum/dists_size
+        neg_score=neg_sum/dists_size
         score=pos_score - neg_score
         
         return score
@@ -53,9 +51,9 @@ class AvgSentimentIntensityAggregator(SentimentIntensityAggregator):
 
 class MaxSentimentIntensityAggregator(SentimentIntensityAggregator):
 
-    def aggscore(self, pos_dists, neg_dists):    
-        pos_score=(1-(min(self.pos_dists)))
-        neg_score=(1-(min(self.neg_dists)))
+    def agg_score(pos_dists, neg_dists):    
+        pos_score=(1-(min(pos_dists)))
+        neg_score=(1-(min(neg_dists)))
         score=pos_score - neg_score
         
         return score
