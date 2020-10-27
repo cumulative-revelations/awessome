@@ -20,7 +20,9 @@ if __name__ == "__main__":
                 'I am feeling very sad',
                 'I cant wait to go to the party',
                 'I am not happy',
-                 'This is awessome!!']
+                 'This is awessome!!',
+                 'This is awesome',
+                 'lol :D :D :-)']
 
 
     for sentence in sentences:
