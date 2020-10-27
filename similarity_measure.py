@@ -8,24 +8,31 @@ Created on Tue Oct 20 20:20:20 2020
 import scipy 
 
 
-class Similarity:
+class Similarity(object):
     
-    def __init__():
+    def __init__(self):
         pass
         
-    def similarity_value(text_embedding, seeds_embeddings, similarity_measure):
+    def score(self, text_embedding, seeds_embeddings):
         """
-        :param similarity_measure: scipy offers several measures ex: cosine, jaccard, etc
         :param text_embedding: an embedding representation for the text using the language model
         :param seeds_embeddings: a list of embeddings representing the seed words using the language model
         :returns: a similarity(float)
         """
-        pass
+        return 0.0
 
     
-class ScipySimilarity(Similarity):
+class CosineSimilarity(Similarity):
 
-    def similarity_value(text_embedding, seeds_embeddings, similarity_measure):  
-        value = scipy.spatial.distance.cdist([text_embedding], seeds_embeddings, similarity_measure)[0]
+    def score(self, text_embedding, seeds_embeddings):
+        sim_score = scipy.spatial.distance.cdist([text_embedding], seeds_embeddings, 'cosine')[0]
                
-        return value
+        return sim_score
+
+
+
+class EuclideanSimilarity(Similarity):
+    def score(self, text_embedding, seeds_embeddings):
+        sim_score = scipy.spatial.distance.cdist([text_embedding], seeds_embeddings, 'euclidean')[0]
+
+        return sim_score
