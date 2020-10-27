@@ -41,7 +41,7 @@ class SentimentIntensityScorerBuilder:
        lexicon_list, lexicon_dict = self._load_lexicon_from_file(lexicon_file)
        pos_seeds_embeddings, neg_seeds_embeddings = self._make_seed_lists(lexicon_list, self.language_model, self.seed_size)
        builder_name  ='{}|{}|{}'.format(self.aggregator_method_name, self.language_model_name,self.lexicon_name)
-       scorer = SentimentIntensityScorer(pos_seeds_embeddings, neg_seeds_embeddings, self.aggregator, self.language_model, self.similarity_method, self.similarity_measure, self.weighted, builder_name)
+       scorer = SentimentIntensityScorer(pos_seeds_embeddings, neg_seeds_embeddings, self.aggregator, self.language_model, self.similarity_method, self.similarity_measure, self.weighted, lexicon_list, lexicon_dict, builder_name)
 
        return scorer
 
@@ -113,11 +113,11 @@ class SentimentIntensityScorerBuilder:
       """
 
       models_name = [
-         'bert-base-nli-mean-tokens',
-         'bert-large-nli-mean-tokens',
-         'bert-base-nli-stsb-mean-tokens',
+         'bert-base-nli-mean-tokens', #fast
+         'bert-large-nli-mean-tokens', 
+         'bert-base-nli-stsb-mean-tokens', 
          'bert-large-nli-stsb-mean-tokens',
-         'roberta-base-nli-stsb-mean-tokens',
+         #'roberta-base-nli-stsb-mean-tokens', #TypeError: __init__() got an unexpected keyword argument 'do_lower_case'
          'roberta-large-nli-stsb-mean-tokens',
          'distilbert-base-nli-stsb-mean-tokens',
          'xlm-r-100langs-bert-base-nli-stsb-mean-tokens',

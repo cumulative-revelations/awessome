@@ -7,7 +7,7 @@ Created on Tue Oct 20 20:20:20 2020
 
 class SentimentIntensityScorer:
 
-   def __init__(self, pos_seeds_embeddings, neg_seeds_embeddings, aggregator,  language_model_embedder, similarity_method, similarity_measure, weighted, builder_name):
+   def __init__(self, pos_seeds_embeddings, neg_seeds_embeddings, aggregator,  language_model_embedder, similarity_method, similarity_measure, weighted, lexicon_list, lexicon_dict, builder_name):
       """
 
       :param pos_seeds_embeddings:
@@ -25,6 +25,8 @@ class SentimentIntensityScorer:
       self.similarity_measure=similarity_measure
       self.language_model_embedder=language_model_embedder
       self.weighted=weighted
+      self.lexicon_list=lexicon_list
+      self.lexicon_dict=lexicon_dict
       self.name = builder_name
 
 
@@ -65,7 +67,7 @@ class SentimentIntensityScorer:
 
    def add_weight(self, distances_pos, distances_neg):
       distances_pos_w=[]
-      distances_neg_w=[]  
+      distances_neg_w=[] 
 
       for i in range(len(distances_pos)):
          distances_pos_w.append(distances_pos[i] * float(self.lexicon_dict[self.lexicon_list[i]]))
