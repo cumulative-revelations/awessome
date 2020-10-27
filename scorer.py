@@ -5,52 +5,51 @@ Created on Tue Oct 20 20:20:20 2020
 """
 
 
-class SentimentIntensityScorer:
+class SentimentIntensityScorer(object):
 
-   def __init__(self, pos_seeds_embeddings, neg_seeds_embeddings, aggregator,  language_model_embedder, similarity_method, similarity_measure, weighted, lexicon_list, lexicon_dict, builder_name):
+   def __init__(self, pos_seeds_embeddings, neg_seeds_embeddings, aggregator,  language_model_embedder, similarity, weighted, lexicon_list, lexicon_dict):
       """
 
       :param pos_seeds_embeddings:
       :param neg_seeds_embeddings:
-      :param aggregator:
+      :param aggregator: expects an aggregation object from awessome.aggegrator
       :param language_model_embedder:
-      :param similarity_method: We're using scipy model, but others can be later added
-      :param similarity_measure: scipy offers several measures ex: cosine, jaccard, etc
+     :param similarity: expects a similarity object from awessome.similarity_measure
       :param weighted: is a boolean, if True we use a dictionary of terms as weights to modify the similarity between 
       """
       self.pos_seeds_embeddings=pos_seeds_embeddings
       self.neg_seeds_embeddings=neg_seeds_embeddings
       self.aggregator=aggregator
-      self.similarity_method=similarity_method
-      self.similarity_measure=similarity_measure
+      self.similarity=similarity
       self.language_model_embedder=language_model_embedder
       self.weighted=weighted
       self.lexicon_list=lexicon_list
       self.lexicon_dict=lexicon_dict
-      self.name = builder_name
+      self.name = 'awessome'
 
 
    def score_sentence(self, text):
       text=self.split_long_sentence(text)
       text_embedding=self.language_model_embedder.encode(text)
 
-      distances_pos=self.similarity_method.similarity_value(text_embedding, self.pos_seeds_embeddings, self.similarity_measure)
-      distances_neg=self.similarity_method.similarity_value(text_embedding, self.neg_seeds_embeddings, self.similarity_measure)
+      distances_pos=self.similarity.score(text_embedding, self.pos_seeds_embeddings)
+      distances_neg=self.similarity.score(text_embedding, self.neg_seeds_embeddings)
 
-      if self.weighted == True:
+      if self.weighted:
          distances_pos, distances_neg=self.add_weight(distances_pos, distances_neg)
+
       score=self.aggregator.agg_score(distances_pos, distances_neg)
 
       return score
 
 
    def score_list(self, sentence_list):
-      scoreDict={}
+      score_dict={}
       for i in range(len(sentence_list)):
          score=self.scoreSentence(sentence_list[i])
          score_dict[sentence_list[i]]=score
 
-      return scoreDict  
+      return score_dict
 
 
    def split_long_sentence(self, text):
@@ -73,5 +72,5 @@ class SentimentIntensityScorer:
          distances_pos_w.append(distances_pos[i] * float(self.lexicon_dict[self.lexicon_list[i]]))
          distances_neg_w.append(distances_neg[i] * float(self.lexicon_dict[self.lexicon_list[i]]))
 
-      return distances_pos_w,distances_neg_w
+      return distances_pos_w, distances_neg_w
 
