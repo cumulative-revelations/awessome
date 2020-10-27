@@ -9,6 +9,7 @@ import scipy
 from sentence_transformers import SentenceTransformer
 import operator
 from aggregator import SumSentimentIntensityAggregator, AvgSentimentIntensityAggregator, MaxSentimentIntensityAggregator
+#from similarity_measure import CosSimilarity
 from scorer import SentimentIntensityScorer
 
 
@@ -19,12 +20,15 @@ DEFAULT_LANGUAGE_MODEL = 'bert-base-nli-mean-tokens'
 
 class SentimentIntensityScorerBuilder:
 
-   def __init__(self, aggregation_method, language_model_name):
-      self.aggregator = self._create_aggregator(aggregation_method)
+   def __init__(self, aggregation_method_name, language_model_name):
+      self.aggregator_method_name = aggregation_method_name
+      self.language_model_name = language_model_name
+      self.aggregator = self._create_aggregator(aggregation_method_name)
       self.language_model  = self._create_language_model(language_model_name)
+      self.builder_name  ='{}-{}'.format(self.aggregator_method_name, self.language_model_name)
 
 
-   def build_from_lexicon_file(self, lexicon_file, seed_size=DEFAULT_SEED_SIZE):
+   def build_scorer_from_lexicon_file(self, lexicon_file, seed_size=DEFAULT_SEED_SIZE):
        scorer = None
 
        lexicon_list, lexicon_dict = self._load_lexicon_from_file(lexicon_file)
@@ -34,7 +38,7 @@ class SentimentIntensityScorerBuilder:
        return scorer
 
 
-   def build_from_prebuilt_lexicon(self, lexicon, seed_size=DEFAULT_SEED_SIZE):
+   def build_scorer_from_prebuilt_lexicon(self, lexicon, seed_size=DEFAULT_SEED_SIZE):
       """
       :param lexicon: the name of a prebuilt lexicon (string)
       :param seed_size: the number of positive and negative seed terms to use given the lexicon
@@ -85,6 +89,7 @@ class SentimentIntensityScorerBuilder:
          aggregator = aggregators[am]
       else:
          aggregator=aggregators[DEFAULT_AGGREGATOR]
+         self.aggregator_method_name = DEFAULT_AGGREGATOR
 
       return aggregator
 
@@ -111,7 +116,9 @@ class SentimentIntensityScorerBuilder:
       if language_model_name in models_name:
          language_model = SentenceTransformer(language_model_name)
       else:
-         language_model = SentenceTransformer('bert-base-nli-mean-tokens')
+         language_model = SentenceTransformer(DEFAULT_LANGUAGE_MODEL)
+         self.language_model_name = DEFAULT_LANGUAGE_MODEL
+
 
       return language_model
 

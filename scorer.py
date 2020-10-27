@@ -3,14 +3,22 @@
 
 
 class SentimentIntensityScorer:
-    
-   def __init__(self, pos_seedsEmbeddings, neg_seedsEmbeddings, aggregator, embedder, weighted=False):
+
+   def __init__(self, pos_seeds_embeddings, neg_seeds_embeddings, aggregator, similarity,  embedder, weighted=False):
+      """
+
+      :param pos_seeds_embeddings:
+      :param neg_seeds_embeddings:
+      :param aggregator:
+      :param embedder:
+      :param weighted:
+      """
       self.pos_seedsEmbeddings=pos_seedsEmbeddings
       self.neg_seedsEmbeddings=neg_seedsEmbeddings
       self.aggregator=aggregator
       self.embedder=embedder
       self.weighted=weighted
-         
+      self.name = 'avg-bert-vader'
 
    def score_sentence(self, text):
       text=self.splitLongText(text)
