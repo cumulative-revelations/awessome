@@ -40,7 +40,7 @@ class SentimentIntensityScorerBuilder(object):
        pos_seeds_embeddings, neg_seeds_embeddings = self._make_seed_lists(lexicon_list, self.language_model, self.seed_size)
 
        scorer = SentimentIntensityScorer(pos_seeds_embeddings=pos_seeds_embeddings, neg_seeds_embeddings=neg_seeds_embeddings,
-                                         aggregator=self.aggregator, language_model_embedder=self.language_model, similarity=self.similarity_method, weighted=self.weighted, lexicon_list, lexicon_dict)
+                                         aggregator=self.aggregator, language_model_embedder=self.language_model, similarity=self.similarity_method, weighted=self.weighted, lexicon_list=lexicon_list, lexicon_dict=lexicon_dict)
 
        scorer.name = 'awessome-{}-{}-{}-{}'.format(self.aggregator_method_name, self.language_model_name, self.seed_size, self.similarity_method_name)
        return scorer
@@ -116,12 +116,12 @@ class SentimentIntensityScorerBuilder(object):
          'bert-base-nli-mean-tokens', #fast
          'bert-large-nli-mean-tokens', 
          'bert-base-nli-stsb-mean-tokens', 
-         'bert-large-nli-stsb-mean-tokens',
+         'bert-large-nli-stsb-mean-tokens'
          #'roberta-base-nli-stsb-mean-tokens', #TypeError: __init__() got an unexpected keyword argument 'do_lower_case'
-         'roberta-large-nli-stsb-mean-tokens',
-         'distilbert-base-nli-stsb-mean-tokens',
-         'xlm-r-100langs-bert-base-nli-stsb-mean-tokens',
-         'xlm-r-100langs-bert-base-nli-mean-tokens'
+         #'roberta-large-nli-stsb-mean-tokens', #TypeError: __init__() got an unexpected keyword argument 'do_lower_case'
+         #'distilbert-base-nli-stsb-mean-tokens', # needs GPU
+         #'xlm-r-100langs-bert-base-nli-stsb-mean-tokens', # needs GPU
+         #'xlm-r-100langs-bert-base-nli-mean-tokens' # needs GPU
       ]
 
       if language_model_name in models_name:

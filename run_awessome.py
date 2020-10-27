@@ -12,7 +12,7 @@ from similarity_measure import *
 if __name__ == "__main__":
 
     sis_builder = SentimentIntensityScorerBuilder('avg','bert-base-nli-mean-tokens')
-    sis_scorer = sis_builder.build_scorer_from_prebuilt_lexicon('labmt')
+    sis_scorer = sis_builder.build_scorer_from_prebuilt_lexicon('vader')
 
     print(sis_scorer.name)
    
