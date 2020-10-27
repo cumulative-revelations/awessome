@@ -25,11 +25,11 @@ class SentimentIntensityScorer:
       return score
 
 
-   def score_list(self, sentences_list):
+   def score_list(self, sentence_list):
       scoreDict={}
-      for i in range(len(sentencesList)):
-         score=self.scoreSentence(sentencesList[i])
-         scoreDict[sentencesList[i]]=score
+      for i in range(len(sentence_list)):
+         score=self.scoreSentence(sentence_list[i])
+         scoreDict[sentence_list[i]]=score
 
       return scoreDict  
 
