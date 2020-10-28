@@ -5,12 +5,12 @@ Created on Tue Oct 20 20:20:20 2020
 For license information, see LICENSE.TXT
 """
 
-import operator
+import operator, os
 
-from awessome_aggregator import SumSentimentIntensityAggregator, AvgSentimentIntensityAggregator, \
+from awessome.awessome_aggregator import SumSentimentIntensityAggregator, AvgSentimentIntensityAggregator, \
    MaxSentimentIntensityAggregator
-from awessome_scorer import SentimentIntensityScorer
-from awessome_similarity import CosineSimilarity, EuclideanSimilarity
+from awessome.awessome_scorer import SentimentIntensityScorer
+from awessome.awessome_similarity import CosineSimilarity, EuclideanSimilarity
 from sentence_transformers import SentenceTransformer
 
 DEFAULT_SEED_SIZE =500
@@ -36,13 +36,14 @@ class SentimentIntensityScorerBuilder(object):
 
     def build_scorer_from_lexicon_file(self, lexicon_file):
 
+         filename = os.path.basename(lexicon_file)
          lexicon_list, lexicon_dict = self._load_lexicon_from_file(lexicon_file)
          pos_seeds_embeddings, neg_seeds_embeddings = self._make_seed_lists(lexicon_list, self.language_model, self.seed_size)
 
          scorer = SentimentIntensityScorer(pos_seeds_embeddings=pos_seeds_embeddings, neg_seeds_embeddings=neg_seeds_embeddings,
                                                      aggregator=self.aggregator, language_model_embedder=self.language_model, similarity=self.similarity_method, weighted=self.weighted, lexicon_list=lexicon_list, lexicon_dict=lexicon_dict)
 
-         scorer.name = 'awessome-{}-{}-{}-{}'.format(self.aggregator_method_name, self.language_model_name, self.seed_size, self.similarity_method_name)
+         scorer.name = 'awessome-{}-{}-{}-{}-{}'.format(self.aggregator_method_name, self.language_model_name, self.seed_size, self.similarity_method_name, filename)
          return scorer
 
     def build_scorer_from_prebuilt_lexicon(self, lexicon):
