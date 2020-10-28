@@ -1,1 +1,2 @@
-global-include *.txt *.py
+include *.txt *.py *.rst
+recursive-include awessome *.txt *.py

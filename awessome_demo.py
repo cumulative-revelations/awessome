@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Oct 20 20:20:20 2020
-@author: Amal Htait and Leif Azzopardi
+@authors: Amal Htait and Leif Azzopardi
+For license information, see LICENSE.TXT
 """
 
-from awessome.builder import *
-
-
+from awessome.awessome_builder import *
 
 if __name__ == "__main__":
 
@@ -24,7 +23,6 @@ if __name__ == "__main__":
                  'This is awesome',
                  'lol',
                  ':-)']
-
 
     for sentence in sentences:
         print(vader_scorer.name, sentence, vader_scorer.score_sentence(sentence))
