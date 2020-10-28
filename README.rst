@@ -13,7 +13,7 @@ using AWESSOME.
 
 
 AWESSOME also draws upon the recent advances in language model by using the Transformers from HuggingFace,
- to create word embeddings using BERT, RoBERTa, etc.
+to create word embeddings using BERT, RoBERTa, etc.
 
 
 AWESSOME is scalable, and does not require any training data, while providing more fine grained (and accurate) 
