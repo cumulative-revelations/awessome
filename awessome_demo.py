@@ -17,18 +17,20 @@ if __name__ == "__main__":
     labmt_max_scorer = max_builder.build_scorer_from_prebuilt_lexicon('labmt')
 
     sentences = ['I am happy',
+                'I am very happy',
+                'I am not happy',
                 'I am feeling very sad',
                 'I cant wait to go to the party',
-                'I am not happy',
-                 'This is awessome!!',
-                 'This is awesome!!',
-                 'This is awesome',
-                 'lol',
-                 ':-)']
+                'This is awessome!!',
+                'This is awesome!!',
+                'This is awesome',
+                'lol',
+                ':-)']
 
     for sentence in sentences:
-        print(vader_avg_scorer.name, sentence, vader_avg_scorer.score_sentence(sentence))
-        print(labmt_avg_scorer.name, sentence, labmt_avg_scorer.score_sentence(sentence))
-        print(vader_max_scorer.name, sentence, vader_max_scorer.score_sentence(sentence))
-        print(labmt_max_scorer.name, sentence, labmt_max_scorer.score_sentence(sentence))
+        print(sentence)
+        print(vader_avg_scorer.name, vader_avg_scorer.score_sentence(sentence))
+        print(labmt_avg_scorer.name, labmt_avg_scorer.score_sentence(sentence))
+        print(vader_max_scorer.name, vader_max_scorer.score_sentence(sentence))
+        print(labmt_max_scorer.name, labmt_max_scorer.score_sentence(sentence))
         print('------------------------------------------------------------------------')
