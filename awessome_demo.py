@@ -4,9 +4,8 @@ Created on Tue Oct 20 20:20:20 2020
 @author: Amal Htait and Leif Azzopardi
 """
 
+from awessome.builder import *
 
-from builder import *
-from similarity_measure import *
 
 
 if __name__ == "__main__":
