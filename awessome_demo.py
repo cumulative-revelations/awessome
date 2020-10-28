@@ -9,10 +9,12 @@ from awessome.awessome_builder import *
 
 if __name__ == "__main__":
 
-    avg_builder = SentimentIntensityScorerBuilder('avg','bert-base-nli-mean-tokens')
-    max_builder = SentimentIntensityScorerBuilder('avg', 'bert-base-nli-mean-tokens')
-    vader_scorer = avg_builder.build_scorer_from_prebuilt_lexicon('vader')
-    labmt_scorer = avg_builder.build_scorer_from_prebuilt_lexicon('labmt')
+    avg_builder = SentimentIntensityScorerBuilder('avg','bert-base-nli-mean-tokens','euclidean','100',True)
+    max_builder = SentimentIntensityScorerBuilder('max', 'bert-base-nli-mean-tokens')
+    vader_avg_scorer = avg_builder.build_scorer_from_prebuilt_lexicon('vader')
+    labmt_avg_scorer = avg_builder.build_scorer_from_prebuilt_lexicon('labmt')
+    vader_max_scorer = max_builder.build_scorer_from_prebuilt_lexicon('vader')
+    labmt_max_scorer = max_builder.build_scorer_from_prebuilt_lexicon('labmt')
 
     sentences = ['I am happy',
                 'I am feeling very sad',
@@ -25,6 +27,8 @@ if __name__ == "__main__":
                  ':-)']
 
     for sentence in sentences:
-        print(vader_scorer.name, sentence, vader_scorer.score_sentence(sentence))
-        print(labmt_scorer.name, sentence, labmt_scorer.score_sentence(sentence))
-
+        print(vader_avg_scorer.name, sentence, vader_avg_scorer.score_sentence(sentence))
+        print(labmt_avg_scorer.name, sentence, labmt_avg_scorer.score_sentence(sentence))
+        print(vader_max_scorer.name, sentence, vader_max_scorer.score_sentence(sentence))
+        print(labmt_max_scorer.name, sentence, labmt_max_scorer.score_sentence(sentence))
+        print('------------------------------------------------------------------------')

@@ -39,7 +39,7 @@ class AvgSentimentIntensityAggregator(SentimentIntensityAggregator):
     def agg_score(self, pos_dists, neg_dists):
         pos_sum = 0.0
         neg_sum = 0.0
-        dists_size = len(pos_dists.tolist())
+        dists_size = len(pos_dists)
         for i in range(dists_size):
             pos_sum = pos_sum + (1.0-pos_dists[i])
             neg_sum = neg_sum + (1.0-neg_dists[i])

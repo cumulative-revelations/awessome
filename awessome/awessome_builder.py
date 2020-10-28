@@ -5,7 +5,8 @@ Created on Tue Oct 20 20:20:20 2020
 For license information, see LICENSE.TXT
 """
 
-import operator, os
+import operator
+import os
 
 from awessome.awessome_aggregator import SumSentimentIntensityAggregator, AvgSentimentIntensityAggregator, \
    MaxSentimentIntensityAggregator
@@ -36,15 +37,15 @@ class SentimentIntensityScorerBuilder(object):
 
     def build_scorer_from_lexicon_file(self, lexicon_file):
 
-         filename = os.path.basename(lexicon_file)
-         lexicon_list, lexicon_dict = self._load_lexicon_from_file(lexicon_file)
-         pos_seeds_embeddings, neg_seeds_embeddings = self._make_seed_lists(lexicon_list, self.language_model, self.seed_size)
+        filename = os.path.basename(lexicon_file)
+        lexicon_list, lexicon_dict = self._load_lexicon_from_file(lexicon_file)
+        pos_seeds_embeddings, neg_seeds_embeddings = self._make_seed_lists(lexicon_list, self.language_model, self.seed_size)
 
-         scorer = SentimentIntensityScorer(pos_seeds_embeddings=pos_seeds_embeddings, neg_seeds_embeddings=neg_seeds_embeddings,
-                                                     aggregator=self.aggregator, language_model_embedder=self.language_model, similarity=self.similarity_method, weighted=self.weighted, lexicon_list=lexicon_list, lexicon_dict=lexicon_dict)
+        scorer = SentimentIntensityScorer(pos_seeds_embeddings=pos_seeds_embeddings, neg_seeds_embeddings=neg_seeds_embeddings,
+                                                        aggregator=self.aggregator, language_model_embedder=self.language_model, similarity=self.similarity_method, weighted=self.weighted, lexicon_list=lexicon_list, lexicon_dict=lexicon_dict)
 
-         scorer.name = 'awessome-{}-{}-{}-{}-{}'.format(self.aggregator_method_name, self.language_model_name, self.seed_size, self.similarity_method_name, filename)
-         return scorer
+        scorer.name = 'awessome-{}-{}-{}-{}-{}'.format(self.aggregator_method_name, self.language_model_name, self.seed_size, self.similarity_method_name, filename)
+        return scorer
 
     def build_scorer_from_prebuilt_lexicon(self, lexicon):
         """
@@ -55,16 +56,15 @@ class SentimentIntensityScorerBuilder(object):
         self.lexicon_name = lexicon
 
         lexicons = ['vader',
-                        'labmt']
+                          'labmt']
 
         if lexicon not in lexicons:
-           lexicon = DEFAULT_LEXICON
+            lexicon = DEFAULT_LEXICON
 
         lexicon_file  =  'lexicon/{}.txt'.format(lexicon)
         #lexicon_file  =  'lexicon/{}.lex'.format(lexicon) => we'll need to change our lexicon files to .lex
 
         return self.build_scorer_from_lexicon_file(lexicon_file)
-
 
     def _load_lexicon_from_file(self, lexicon_file):
         """
@@ -74,12 +74,11 @@ class SentimentIntensityScorerBuilder(object):
         lexicon_dict = {}
         seeds = open(lexicon_file, 'r', encoding='utf-8-sig').readlines()
         for i in range(len(seeds)):
-           line = seeds[i].split('\t')
-           lexicon_dict[line[0].strip()] = line[1].strip()
-           lexicon_dict = dict( sorted( lexicon_dict.items(), key=operator.itemgetter(1), reverse=True ) )
+            line = seeds[i].split('\t')
+            lexicon_dict[line[0].strip()] = line[1].strip()
+            lexicon_dict = dict( sorted( lexicon_dict.items(), key=operator.itemgetter(1), reverse=True ) )
 
         return list(lexicon_dict.keys()), lexicon_dict
-
 
     def _create_aggregator(self, aggregation_method):
         """
@@ -89,20 +88,19 @@ class SentimentIntensityScorerBuilder(object):
         """
 
         aggregators={
-           'sum': SumSentimentIntensityAggregator,
-           'avg': AvgSentimentIntensityAggregator,
-           'max': MaxSentimentIntensityAggregator
-          }
+            'sum': SumSentimentIntensityAggregator,
+            'avg': AvgSentimentIntensityAggregator,
+            'max': MaxSentimentIntensityAggregator
+         }
 
         am = aggregation_method.lower()
         if am in aggregators:
-           aggregator = aggregators[am]()
+              aggregator = aggregators[am]()
         else:
-           aggregator=aggregators[DEFAULT_AGGREGATOR]()
-           self.aggregator_method_name = DEFAULT_AGGREGATOR
+            aggregator=aggregators[DEFAULT_AGGREGATOR]()
+            self.aggregator_method_name = DEFAULT_AGGREGATOR
 
         return aggregator
-
 
     def _create_language_model(self, language_model_name):
         """
@@ -113,22 +111,22 @@ class SentimentIntensityScorerBuilder(object):
         """
 
         models_name = [
-           'bert-base-nli-mean-tokens', #fast
-           'bert-large-nli-mean-tokens', 
-           'bert-base-nli-stsb-mean-tokens', 
-           'bert-large-nli-stsb-mean-tokens',
-           #'roberta-base-nli-stsb-mean-tokens', #TypeError: __init__() got an unexpected keyword argument 'do_lower_case'
-           #'roberta-large-nli-stsb-mean-tokens', #TypeError: __init__() got an unexpected keyword argument 'do_lower_case'
-           'distilbert-base-nli-stsb-mean-tokens', # needs GPU
-           'xlm-r-100langs-bert-base-nli-stsb-mean-tokens', # needs GPU
-           'xlm-r-100langs-bert-base-nli-mean-tokens' # needs GPU
+            'bert-base-nli-mean-tokens', #fast
+            'bert-large-nli-mean-tokens', 
+            'bert-base-nli-stsb-mean-tokens', 
+            'bert-large-nli-stsb-mean-tokens',
+            #'roberta-base-nli-stsb-mean-tokens', #TypeError: __init__() got an unexpected keyword argument 'do_lower_case'
+            #'roberta-large-nli-stsb-mean-tokens', #TypeError: __init__() got an unexpected keyword argument 'do_lower_case'
+            'distilbert-base-nli-stsb-mean-tokens', # needs GPU
+            'xlm-r-100langs-bert-base-nli-stsb-mean-tokens', # needs GPU
+            'xlm-r-100langs-bert-base-nli-mean-tokens' # needs GPU
         ]
 
         if language_model_name in models_name:
-           language_model_embedder = SentenceTransformer(language_model_name)
+            language_model_embedder = SentenceTransformer(language_model_name)
         else:
-           language_model_embedder = SentenceTransformer(DEFAULT_LANGUAGE_MODEL)
-           self.language_model_name = DEFAULT_LANGUAGE_MODEL
+            language_model_embedder = SentenceTransformer(DEFAULT_LANGUAGE_MODEL)
+            self.language_model_name = DEFAULT_LANGUAGE_MODEL
 
         return language_model_embedder
 
@@ -142,8 +140,8 @@ class SentimentIntensityScorerBuilder(object):
         """
 
         max_seed_size = len(lexicon_list)/2
-        if seed_size > max_seed_size:
-           seed_size=max_seed_size
+        if int(seed_size) > max_seed_size:
+            seed_size=max_seed_size
 
         pos_seeds=lexicon_list[:int(seed_size)]
         neg_seeds=lexicon_list[-int(seed_size):]
@@ -160,16 +158,16 @@ class SentimentIntensityScorerBuilder(object):
         """
 
         similarity_methods = {
-           'cosine': CosineSimilarity,
-           'euclidean': EuclideanSimilarity
+            'cosine': CosineSimilarity,
+            'euclidean': EuclideanSimilarity
         }
 
         sm = similarity_method.lower()
         if sm in similarity_methods:
-           sim = similarity_methods[sm]()
+            sim = similarity_methods[sm]()
         else:
-           sim = similarity_methods[DEFAULT_SIMILARITY_METHOD]()
-           self.similarity_method_name = DEFAULT_SIMILARITY_METHOD
+            sim = similarity_methods[DEFAULT_SIMILARITY_METHOD]()
+            self.similarity_method_name = DEFAULT_SIMILARITY_METHOD
 
         return sim
 
