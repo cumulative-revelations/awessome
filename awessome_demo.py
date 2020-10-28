@@ -9,7 +9,7 @@ from awessome.awessome_builder import *
 
 if __name__ == "__main__":
 
-    avg_builder = SentimentIntensityScorerBuilder('avg','bert-base-nli-mean-tokens','euclidean','100',True)
+    avg_builder = SentimentIntensityScorerBuilder('avg', 'bert-base-nli-mean-tokens', 'euclidean', '100', True)
     max_builder = SentimentIntensityScorerBuilder('max', 'bert-base-nli-mean-tokens')
     vader_avg_scorer = avg_builder.build_scorer_from_prebuilt_lexicon('vader')
     labmt_avg_scorer = avg_builder.build_scorer_from_prebuilt_lexicon('labmt')

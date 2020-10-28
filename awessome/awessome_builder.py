@@ -14,6 +14,7 @@ from awessome.awessome_scorer import SentimentIntensityScorer
 from awessome.awessome_similarity import CosineSimilarity, EuclideanSimilarity
 from sentence_transformers import SentenceTransformer
 
+# Default values
 DEFAULT_SEED_SIZE =500
 DEFAULT_AGGREGATOR ='avg'
 DEFAULT_LEXICON = 'vader'
@@ -23,8 +24,20 @@ DEFAULT_WEIGHTED = False
 
 
 class SentimentIntensityScorerBuilder(object):
+    """
+    Build the sentiment intensity scorer
+    """
 
     def __init__(self, aggregation_method_name, language_model_name, similarity_method_name=DEFAULT_SIMILARITY_METHOD, seed_size=DEFAULT_SEED_SIZE, weighted=DEFAULT_WEIGHTED):
+        """
+
+        :param aggregation_method_name: Selected aggregation method : avg, sum or max (default = avg)
+        :param language_model_name: Selected pre-trained language model: bert-base-nli-mean-tokens, distilbert-base-nli-stsb-mean-tokens, etc
+                (default = bert-base-nli-mean-tokens)
+        :param similarity_method_name: Selected similarity method : cosine or euclidean (default = cosine)
+        :param seed_size: Selected seeds lists size (default = 500)
+        :param weighted: Option of adding weight to aggregated similarity scores in the sentiment (default = False)
+        """
         self.aggregator_method_name = aggregation_method_name
         self.language_model_name = language_model_name
         self.similarity_method_name = similarity_method_name
@@ -36,7 +49,12 @@ class SentimentIntensityScorerBuilder(object):
         self.language_model  = self._create_language_model(language_model_name)
 
     def build_scorer_from_lexicon_file(self, lexicon_file):
+        """
+        Build and return a scorer object built using all the given parameters, including an input lexicon file
 
+        :param lexicon_file:
+        :return: Sentiment Intensity Scorer Object
+        """
         filename = os.path.basename(lexicon_file)
         lexicon_list, lexicon_dict = self._load_lexicon_from_file(lexicon_file)
         pos_seeds_embeddings, neg_seeds_embeddings = self._make_seed_lists(lexicon_list, self.language_model, self.seed_size)
@@ -49,6 +67,9 @@ class SentimentIntensityScorerBuilder(object):
 
     def build_scorer_from_prebuilt_lexicon(self, lexicon):
         """
+        Build and return a scorer object built using all the given parameters, using a prebuilt lexicon
+        by calling the function: build_scorer_from_lexicon_file
+
         :param lexicon: the name of a prebuilt lexicon (string)
         :param seed_size: the number of positive and negative seed terms to use given the lexicon
         :return: SentimentIntensityScorer
@@ -68,8 +89,11 @@ class SentimentIntensityScorerBuilder(object):
 
     def _load_lexicon_from_file(self, lexicon_file):
         """
-        :param lexicon_file: the name of the file containing seed terms and their sentiment intensity score (tab separated file)
-        :return: the list of lexicon terms, and a dictionary of terms (key) and SI scores (value)
+        Load the lexicon to be used in the scorer from an input file.
+
+        :param lexicon_file: the name of the file containing seed terms and their
+                sentiment intensity score (tab separated file).
+        :return: the list of lexicon terms, and a dictionary of terms (key) and SI scores (value).
         """
         lexicon_dict = {}
         seeds = open(lexicon_file, 'r', encoding='utf-8-sig').readlines()
@@ -82,9 +106,10 @@ class SentimentIntensityScorerBuilder(object):
 
     def _create_aggregator(self, aggregation_method):
         """
+        Return the aggregation class to use based on an input parameter.
 
-        :param aggregation_method:
-        :return:
+        :param aggregation_method: Aggregation method that can be : avg, sum or max.
+        :return: Aggregation class to use.
         """
 
         aggregators={
@@ -104,8 +129,9 @@ class SentimentIntensityScorerBuilder(object):
 
     def _create_language_model(self, language_model_name):
         """
+        Return a created embedder based on an input parameter.
 
-        :param language_model_name: 
+        :param language_model_name: pretrained language model name (ex: bert-base-nli-mean-tokens).
         :return: the embedder created using the language model, 
                    that will be used to create the embedding representation of text.
         """
@@ -132,11 +158,13 @@ class SentimentIntensityScorerBuilder(object):
 
     def _make_seed_lists(self, lexicon_list, language_model_embedder, seed_size):
         """
+        Return two embedding lists representing the seeds lists (positive and negative)
 
-        :param lexicon_list:
-        :param language_model_embedder:
-        :param seed_size:
-        :return:
+        :param lexicon_list: a lexicon list extracted from the lexicon file (from _create_language_model)
+        :param language_model_embedder: embedder created based on the pretrained language model
+                (from_create_language_model)
+        :param seed_size: size of seeds lists (default = 500)
+        :return: Two embedding lists representing the seeds lists
         """
 
         max_seed_size = len(lexicon_list)/2
@@ -153,6 +181,8 @@ class SentimentIntensityScorerBuilder(object):
 
     def _create_similarity(self, similarity_method):
         """
+        Return the Class to use for the input similarity method
+
         :param similarity_method: 'cosine','euclidean'
         :return: a Similarity scoring object
         """

@@ -7,21 +7,28 @@ For license information, see LICENSE.TXT
 
 
 class SentimentIntensityAggregator:
+    """
+    Apply an aggregation to a list of similarity scores.
+    """
 
     def __init__(self):
         pass
 
     def agg_score(self, pos_dists, neg_dists):
         """
-        pos_dists: a list of scores for pos terms
-        neg_dists: a list of scores for neg terms
-        returns: a score(float)
+        Return a float as a score of aggregated similarity scores with positive and negative seeds lists.
+
+        :param pos_dists: a list of similarity scores with pos seeds
+        :param neg_dists: a list of similarity scores with neg seeds
+        :return: a score (float)
         """
         pass
 
 
 class SumSentimentIntensityAggregator(SentimentIntensityAggregator):
-
+    """
+    Apply an sum aggregation to a list of similarity scores.
+    """
     def agg_score(self, pos_dists, neg_dists):
         pos_score=0.0
         neg_score=0.0
@@ -35,7 +42,9 @@ class SumSentimentIntensityAggregator(SentimentIntensityAggregator):
 
 
 class AvgSentimentIntensityAggregator(SentimentIntensityAggregator):
-
+    """
+    Apply an average aggregation to a list of similarity scores.
+    """
     def agg_score(self, pos_dists, neg_dists):
         pos_sum = 0.0
         neg_sum = 0.0
@@ -51,7 +60,9 @@ class AvgSentimentIntensityAggregator(SentimentIntensityAggregator):
         
 
 class MaxSentimentIntensityAggregator(SentimentIntensityAggregator):
-
+    """
+    Selecting the maximum value in a list of similarity scores.
+    """
     def agg_score(self, pos_dists, neg_dists):
         pos_score = (1.0-(min(pos_dists)))
         neg_score = (1.0-(min(neg_dists)))
