@@ -11,7 +11,7 @@ setup(
   version='0.0.1',
   description='awessome',
   include_package_data=True,
-  long_description=open('README.txt').read() + '\n\n' + open('CHANGELOG.txt').read(),
+  long_description=open('README.rst').read() + '\n\n' + open('CHANGELOG.txt').read(),
   url='',  
   author='Amal Htait and Leif Azzopardi',
   author_email='amal.htait@strath.ac.uk, leif.azzopardi@strath.ac.uk',
