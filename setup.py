@@ -18,11 +18,11 @@ def parse_requirements(filename):
 
 setup(
   name=PACKAGE_NAME,
-  version='0.0.1',
+  version='0.0.14',
   description='awessome',
   include_package_data=True,
   install_requires=parse_requirements("requirements.txt"),
-  long_description=open('README.rst').read() + '\n\n' + open('CHANGELOG.txt').read(),
+  long_description=open('README.txt').read() + '\n\n' + open('CHANGELOG.txt').read(),
   url='https://github.com/cumulative-revelations/awessome',  
   author='Amal Htait and Leif Azzopardi',
   author_email='amal.htait@strath.ac.uk, leif.azzopardi@strath.ac.uk',

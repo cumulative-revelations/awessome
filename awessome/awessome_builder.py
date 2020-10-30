@@ -7,6 +7,7 @@ For license information, see LICENSE.TXT
 
 import operator
 import os
+from inspect import getsourcefile
 
 from awessome.awessome_aggregator import SumSentimentIntensityAggregator, AvgSentimentIntensityAggregator, \
    MaxSentimentIntensityAggregator
@@ -55,8 +56,10 @@ class SentimentIntensityScorerBuilder(object):
         :param lexicon_file:
         :return: Sentiment Intensity Scorer Object
         """
+        _this_module_file_path_ = os.path.abspath(getsourcefile(lambda: 0))
+        lexicon_full_filepath = os.path.join(os.path.dirname(_this_module_file_path_), lexicon_file)
         filename = os.path.basename(lexicon_file)
-        lexicon_list, lexicon_dict = self._load_lexicon_from_file(lexicon_file)
+        lexicon_list, lexicon_dict = self._load_lexicon_from_file(lexicon_full_filepath)
         pos_seeds_embeddings, neg_seeds_embeddings = self._make_seed_lists(lexicon_list, self.language_model, self.seed_size)
 
         scorer = SentimentIntensityScorer(pos_seeds_embeddings=pos_seeds_embeddings, neg_seeds_embeddings=neg_seeds_embeddings,
@@ -82,7 +85,7 @@ class SentimentIntensityScorerBuilder(object):
         if lexicon not in lexicons:
             lexicon = DEFAULT_LEXICON
 
-        lexicon_file  =  'lexicon/{}.txt'.format(lexicon)
+        lexicon_file  =  '{}.txt'.format(lexicon)
         #lexicon_file  =  'lexicon/{}.lex'.format(lexicon) => we'll need to change our lexicon files to .lex
 
         return self.build_scorer_from_lexicon_file(lexicon_file)
