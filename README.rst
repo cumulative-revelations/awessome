@@ -3,7 +3,7 @@ AWESSOME
 ====================================
 
 A Word Embedding Sentiment Scorer Of Many Emotions (AWESSOME) is a framework with 
-the purpose of predicting the sentiment intensity of sentences.
+the purpose of predicting the sentiment intensity of words and sentences (e.g phrases, tweets).
 
 AWESSOME relies on sentiment seed-words and word embedding, 
 where the similarity between the vector representation of two sentences is considered as a 
@@ -17,7 +17,7 @@ AWESSOME also draws upon the recent advances in language model by using the Tran
 to create word embeddings using BERT, RoBERTa, etc.
 
 AWESSOME is scalable, and does not require any training data, while providing more fine grained (and accurate) 
-sentiment intensity scores of words,  phrases and text.
+sentiment intensity scores of words, phrases and text.
 
 
 * `Citation Information`_
@@ -28,7 +28,7 @@ sentiment intensity scores of words,  phrases and text.
 Citation Information
 ------------------------------------
 
-If you use the AWESSOME sentiment analysis tools in your research, please cite the following paper. For example:  
+If you use the AWESSOME sentiment analysis tools in your research, please cite the following paper. For example (to be added):  
 
   **Htait, A. & Azzopardi, L. (2020). ...... 2020.** 
 
