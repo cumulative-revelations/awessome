@@ -30,7 +30,7 @@ Citation Information
 
 If you use the AWESSOME sentiment analysis tools in your research, please cite the following paper. For example (to be added):  
 
-  **Htait, A. & Azzopardi, L. (2020). ...... 2020.** 
+  **Amal Htait & Leif Azzopardi. AWESSOME: An UnsupervisedSentiment Intensity Scoring Frameworkusing Neural Word Embeddings. In ECIR 2021.** 
 
 
 ====================================
